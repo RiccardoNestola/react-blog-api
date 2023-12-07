@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-const Modal = ({ isOpen, onClose, onAddPost, onSave, existingPost }) => {
+const Modal = ({ isOpen, onClose, onAddPost, onSave, existingPost, apiUrl }) => {
 
     const allTags = ['html', 'css', 'js', 'php'];
     const [selectedTags, setSelectedTags] = useState([]);
@@ -36,7 +36,7 @@ const Modal = ({ isOpen, onClose, onAddPost, onSave, existingPost }) => {
         }
     };
 
-    const Submit = (e) => {
+    const Submit = async (e) => {
         e.preventDefault();
         if (!newPost.title || !newPost.image || !newPost.content) {
             alert('Compila tutti i campi');
@@ -45,13 +45,27 @@ const Modal = ({ isOpen, onClose, onAddPost, onSave, existingPost }) => {
         /* const tagsArray = newPost.tags.split(',').map(tag => tag.trim()); */
         const postData = { ...newPost, tags: selectedTags };
 
-        if (existingPost) {
-            onSave(existingPost.id, postData);
-        } else {
-            onAddPost(postData);
-        }
 
-        onClose();
+        try {
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(postData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Errore HTTP: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            console.log(responseData);
+            onClose();
+        } catch (error) {
+            console.error("Errore durante la richiesta:", error);
+            alert("Si è verificato un errore durante l'invio del post.");
+        }
     };
 
 

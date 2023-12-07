@@ -65,7 +65,7 @@ function App() {
       <main>
         <Carousel images={images} />
 
-        <Modal isOpen={isModalOpen} onClose={() => { setModalOpen(false); setPostToEdit(null); }} onAddPost={addPost} onSave={editPost} existingPost={postToEdit} />
+        <Modal isOpen={isModalOpen} onClose={() => { setModalOpen(false); setPostToEdit(null); }} onAddPost={addPost} onSave={editPost} existingPost={postToEdit} apiUrl="http://localhost:3005/posts/" />
 
         <CardList posts={posts} onDeletePost={deletePost} onEditPost={openEditModal} />
       </main>
