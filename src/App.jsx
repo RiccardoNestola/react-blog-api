@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Carousel from './Components/Carousel/Carousel'
 import images from './data/images'
 import Header from './Components/Header/Header'
 import Modal from './Components/Modal/Modal'
 import CardList from './Components/Cards/CardList'
 import Footer from './Components/Footer/Footer'
-import oldPosts from './data/posts';
+/* import oldPosts from './data/posts'; */
 
 
 function App() {
 
+  async function getPosts() {
+    const response = await fetch('http://localhost:3005/posts/');
+    const data = await response.json();
+    setPosts(data);
+    console.log(data);
+  }
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
   const [isModalOpen, setModalOpen] = useState(false);
-  const [posts, setPosts] = useState(oldPosts);
+  const [posts, setPosts] = useState([]);
   const [postToEdit, setPostToEdit] = useState(null);
 
 
