@@ -38,20 +38,20 @@ const Modal = ({ isOpen, onClose, onAddPost, onSave, existingPost, apiUrl }) => 
 
     const Submit = async (e) => {
         e.preventDefault();
+
         if (!newPost.title || !newPost.image || !newPost.content) {
             alert('Compila tutti i campi');
             return;
         }
-        /* const tagsArray = newPost.tags.split(',').map(tag => tag.trim()); */
-        const postData = { ...newPost, tags: selectedTags };
 
+        const postData = { ...newPost, tags: selectedTags };
+        const method = existingPost ? "PUT" : "POST";
+        const url = existingPost ? `${apiUrl}/${existingPost.id}` : apiUrl;
 
         try {
-            const response = await fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+            const response = await fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(postData)
             });
 
@@ -69,10 +69,12 @@ const Modal = ({ isOpen, onClose, onAddPost, onSave, existingPost, apiUrl }) => 
     };
 
 
+
     useEffect(() => {
         /* console.log(existingPost); */
         if (existingPost) {
-            setSelectedTags(existingPost.tags);
+            setSelectedTags(existingPost.tags.map(tag => tag.name));
+            /* console.log(existingPost.tags.map(tag => tag.name)); */
             setNewPost({
                 title: existingPost.title || '',
                 image: existingPost.image || '',

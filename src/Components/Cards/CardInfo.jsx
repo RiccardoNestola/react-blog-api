@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 
 const TagColor = {
     "html": "bg-red-500",
@@ -9,14 +10,23 @@ const TagColor = {
 
 const CardInfo = ({ post, onDelete, onEdit }) => {
 
+
     const { id, image, tags, title, content } = post;
+
+    const defaultImageUrl = 'https://placehold.co/600x400';
+    const [imageUrl, setImageUrl] = useState(post.image || defaultImageUrl);
+
+    const handleImageError = () => {
+        setImageUrl(defaultImageUrl);
+    };
+
 
 
     return (
 
         <div className="p-4 md:w-1/3">
             <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
-                <img className="lg:h-48 md:h-36 w-full object-cover object-center" src={image} alt="blog" />
+                <img className="lg:h-48 md:h-36 w-full object-cover object-center" src={imageUrl} alt={title} onError={handleImageError} />
                 <div className="p-6">
                     <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
                         {tags.flatMap(tag => tag.name.split(',').map(singleTag => (
